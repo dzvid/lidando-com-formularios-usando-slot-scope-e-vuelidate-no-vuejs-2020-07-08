@@ -1,6 +1,11 @@
-# rocketbank
+## Rocketbank 
+
+> A primeira conta digital no foguete 🚀
+
+![rocketbank screenshot](./rocketbank_demo.png)
 
 ## Project setup
+
 ```
 npm install
 ```
