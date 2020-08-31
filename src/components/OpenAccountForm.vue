@@ -8,29 +8,31 @@
     <form class="flex flex-col mt-10" @submit.prevent="handleSubmit">
       <label>
         <span class="text-white">Nome*</span>
-        <input type="text" class="block w-full mt-1 text-brand-black1 form-input" placeholder="Igor Halfeld">
-        <span class="block mt-1 text-sm font-light text-red-400">* O campo é obrigatório</span>
+        <input @input="$v.name.$touch()" v-model="name" type="text" class="block w-full mt-1 text-brand-black1 form-input" placeholder="Igor Halfeld">
+        <span v-if="isNameValid" class="block mt-1 text-sm font-light text-red-400">* O campo é obrigatório</span>
       </label>
 
       <label class="mt-5">
         <span class="text-white">E-mail*</span>
-        <input text="email" class="block w-full mt-1 text-brand-black1 form-input" placeholder="iguin@iguin.com">
-        <span class="block mt-1 text-sm font-light text-red-400">* O campo é obrigatório</span>
+        <input @input="$v.email.$touch()" v-model="email" text="email" class="block w-full mt-1 text-brand-black1 form-input" placeholder="iguin@iguin.com">
+        <span v-if="isEmailValid" class="block mt-1 text-sm font-light text-red-400">* O campo é obrigatório</span>
       </label>
 
       <label class="mt-5">
         <span class="text-white">CPF*</span>
-        <input type="text" class="block w-full mt-1 text-brand-black1 form-input" placeholder="430.141.452-43">
-        <span class="block mt-1 text-sm font-light text-red-400">* O campo é obrigatório</span>
+        <input @input="$v.cpf.$touch()" v-model="cpf" type="text" class="block w-full mt-1 text-brand-black1 form-input" placeholder="430.141.452-43">
+        <span v-if="isCPFValid" class="block mt-1 text-sm font-light text-red-400">* O campo é obrigatório</span>
       </label>
 
       <label class="mt-5">
         <span class="text-white">Estado</span>
-        <select class="block w-full mt-1 form-select">
+        <select @change="$v.state.$touch()" v-model="state" class="block w-full mt-1 form-select">
+          <option value="" selected disabled>Selecione</option>
           <option value="rio-de-janeiro">Rio de Janeiro</option>
           <option value="sao-paulo">São Paulo</option>
           <option value="minas-gerais">Minas Gerais</option>
         </select>
+        <span v-if="isStateValid" class="block mt-1 text-sm font-light text-red-400">* O campo é obrigatório</span>
       </label>
 
       <div class="pt-10">
@@ -45,14 +47,66 @@
 </template>
 
 <script>
+import { required, minLength } from 'vuelidate/lib/validators'
+import { isValid as isValidCpf } from '@fnando/cpf'
+
+function validEmail (email) {
+  return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(String(email).toLowerCase()) // eslint-disable-line
+}
+
 export default {
   props: {
     push: { type: Function, default: () => ({}) }
   },
+  data: () => ({
+    name: '',
+    email: '',
+    cpf: '',
+    state: ''
+  }),
+  validations: {
+    name: {
+      required,
+      minLength: minLength(2)
+    },
+    email: {
+      required,
+      validEmail
+    },
+    cpf: {
+      required,
+      validCpf: isValidCpf
+    },
+    state: {
+      required
+    }
+  },
+  computed: {
+    isNameValid () {
+      return this.$v.name.$dirty && (!this.$v.name.required || !this.$v.name.minLength)
+    },
+    isEmailValid () {
+      return this.$v.email.$dirty && (!this.$v.email.required || !this.$v.email.validEmail)
+    },
+    isCPFValid () {
+      return this.$v.cpf.$dirty && (!this.$v.cpf.required || !this.$v.cpf.validCpf)
+    },
+    isStateValid () {
+      return this.$v.state.$dirty && this.$v.state.required
+    }
+  },
   methods: {
     handleSubmit () {
       console.log('Submit!')
-      this.$router.push('Success')
+      this.$v.touch()
+
+      if (this.$v.$invalid) {
+        console.log('valid')
+        return
+      }
+
+      console.log('invalid')
+      // this.$router.push('Success')
     }
   }
 }

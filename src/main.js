@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Vuelidate from 'vuelidate'
 import './tailwind.css'
 
 import App from './App.vue'
 import OpenAccount from './pages/OpenAccount'
 import AccountSuccessfullyCreated from './pages/AccountSuccessfullyCreated'
 
+Vue.use(Vuelidate)
 Vue.use(VueRouter)
 
 Vue.config.productionTip = false
