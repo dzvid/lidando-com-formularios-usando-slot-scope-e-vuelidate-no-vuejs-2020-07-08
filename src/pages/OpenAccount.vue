@@ -7,7 +7,8 @@
           <img class="w-full" src="../assets/finance.svg" alt="Ilustração">
         </div>
 
-        <open-account-form class="w-full rounded-sm lg:w-1/2" />
+        <open-account-form-slot-scoped v-if="badassMode" class="w-full rounded-sm lg:w-1/2" />
+        <open-account-form v-else class="w-full rounded-sm lg:w-1/2" />
       </div>
     </div>
 
@@ -16,9 +17,13 @@
 
 <script>
 import OpenAccountForm from '../components/OpenAccountForm'
+import OpenAccountFormSlotScoped from '../components/OpenAccountFormSlotScoped'
 
 export default {
   name: 'App',
-  components: { OpenAccountForm }
+  components: { OpenAccountForm, OpenAccountFormSlotScoped },
+  data: () => ({
+    badassMode: true
+  })
 }
 </script>
