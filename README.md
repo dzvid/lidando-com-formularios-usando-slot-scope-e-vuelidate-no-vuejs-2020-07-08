@@ -1,6 +1,6 @@
 <img src="https://storage.googleapis.com/golden-wind/experts-club/capa-github.svg" />
 
-# Vue.js Forms
+# Lidando com formulários usando slot-scope e Vuelidate no Vue.js
 
 Formulários é sempre uma dor de cabeça no front-end, mas com a evolução das tecnologias e da web em si, tem ficado cada vez mais simples o processo
 de lidar com eles.
